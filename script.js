@@ -1,12 +1,4 @@
-interface State {
-    name: string;
-    population: number;
-    electoralVotes: number;
-    democratPercent: number;
-    republicanPercent: number;
-}
-
-export const States: Record<string, State> = {
+const states = {
 	"MA": { "name": "Massachusetts", "population": 7029000, "electoralVotes": 11, "democratPercent": 64, "republicanPercent": 36 },
 	"MN": { "name": "Minnesota", "population": 5744000, "electoralVotes": 10, "democratPercent": 54, "republicanPercent": 46 },
 	"MT": { "name": "Montana", "population": 1104000, "electoralVotes": 3, "democratPercent": 40, "republicanPercent": 60 },
@@ -59,3 +51,33 @@ export const States: Record<string, State> = {
 	"MI": { "name": "Michigan", "population": 10080000, "electoralVotes": 15, "democratPercent": 51, "republicanPercent": 49 },
 	"AK": { "name": "Alaska", "population": 734000, "electoralVotes": 3, "democratPercent": 42, "republicanPercent": 58 }
 };
+
+// Function to update state colors based on larger party percent
+function updateStateColors() {
+    Object.keys(states).forEach(stateCode => {
+        const stateData = states[stateCode];
+        const stateElement = document.querySelector(`#${stateCode}`); // Assuming the state's ID in the SVG matches its code
+        
+        if (!stateElement) {
+            console.warn(`State element with ID ${stateCode} not found in the SVG.`);
+            return;
+        }
+
+        // Determine the color based on the higher percentage
+        const color = stateData.democratPercent > stateData.republicanPercent ? 'blue' : 'red';
+        stateElement.style.fill = color; // Update the fill color of the SVG element
+    
+        stateElement.addEventListener('mouseover', () => {
+            document.querySelector('#info-box').innerText = `${stateData.name} - Electoral Votes: ${stateData.electoralVotes}`;
+        });
+
+        stateElement.addEventListener('mouseleave', () => {
+            document.querySelector('#info-box').innerText = "";
+        });
+    });
+}
+
+// Call the function after the DOM has loaded
+document.addEventListener('DOMContentLoaded', updateStateColors);
+
+console.log("")
